@@ -1,65 +1,57 @@
 <template>
-  <h1>message: {{ message }}</h1>
-  <hr />
-  <h1>number: {{ number }}</h1>
-  <hr>  
-  <h1>doubleNum(50): {{ doubleNum(50) }}</h1>
-  <hr>
-  <h1>number * 2 = {{ number * 2 }}</h1>
-  <hr>
-  <h1>{{ number > 150? 'number is greater than 150' : 'number is less than 150' }}</h1>
-  <hr>
-  <h1 v-text="number"></h1>
-  <hr>
-  <h1>{{ wizards }}</h1>
-  <hr>
-  <h1>{{ wizards.at(2) }}</h1>
-  <hr>
-  <h1> {{ rawHtml }}</h1>
-  <h1 v-text="rawHtml"></h1>
-  <h1 v-html="rawHtml"></h1>
+  <h1>{{ message }}</h1>
+  <img v-bind:src="imageUrl" alt=""/>
+  <br />
+  <img :src="imageUrl" alt=""/>
 
+
+  <button @click="changeImg">Change image</button>
+  <hr>
+  <input type="text" :value="defaultInputtext">
+  <hr>
+  <p :class="className"> Harry Potter</p>
+
+  <p :class="{ inactive: isInactive, center: isCenter }">
+    Harry Potter
+  </p>
+
+  <p :class="['active', 'center']">Harry Potter</p>
 </template>
 
 <script setup>
- let message = 'Hello, Vue!'
- let number = 50
+import { ref } from 'vue'
+let message = 'Hello, v-bind!'
 
- function doubleNum(num){
-    return num * 2
- }
+let imageUrl = ref('/public/img/banner_1.jpg')
 
- const wizards = [
-            {
-                name: 'Harry Potter',
-                height: 165,
-                hair_color: 'black',
-                gender: 'male'
-            },
-            {
-                name: 'Hermione Granger',
-                height: 165,
-                hair_color: 'brown',
-                gender: 'female'
-            },
-            {
-                name: 'Ron Weasley',
-                height: 173,
-                hair_color: 'red',
-                gender: 'male'
-            },
-            {
-                name: 'Draco Malfoy',
-                height: 175,
-                hair_color: 'blond',
-                gender: 'male'
-            },
-        ];
+function changeImg() {
+  imageUrl.value = '/public/img/banner_2.jpg'
+}
 
-        let rawHtml = '<span style="color: red">This should be red</span>'
+let defaultInputtext = 'Write something here...'
+
+let className = 'active'
+
+let isInactive = ref(false)
+let isCenter = ref(false)
 
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+img {
+  max-width: 300px;
+}
 
+.active {
+  color: green;
+}
+
+.inactive {
+  color: red;
+  text-decoration: line-through;
+}
+
+.center {
+  text-align: center;
+}
 </style>
