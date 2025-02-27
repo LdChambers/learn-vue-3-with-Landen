@@ -1,82 +1,84 @@
 <template>
-  <div class="card">
-    <h2>Message: {{ message }}</h2>
-    <h2>Number: {{ number }}</h2>
-    <button @click="changeMessageToUpperCase">
-      Change message to upper case
-    </button>
-    <button @click="incrementNumber">Increment number</button>
-  </div>
-  <div class="card">
-    <h2>Name: {{ wizard.name }}</h2>
-    <h2>Wand: {{ wizard.wand }}</h2>
-    <button @click="changeNameToUpperCase">Change name to upper case</button>
-    <button @click="changeWandCore">Change wand core</button>
-    <button @click="changeWizard">Change wizard</button>
+  <h1>{{ message }}</h1>
+
+  <button v-on:click="replaceText('v-on is fun!')">Replace text</button>
+  <button @click="replaceText('v-on is fun!')">Replace text</button>
+  <hr>
+  <p>
+    An input field where the user can ONLY enter numbers:
+  </p>
+  <input type="text" @keydown="handleInput($event)">
+  <hr>
+  
+  <div style="width:100px; height:100px; background-color:blue" @contextmenu.prevent="console.log('Show a custom context menu instead')"></div>
+
+  <div id="mouseover" @mouseover="fun1">
+    <textarea @mouseover.stop="fun2(event)">This is a text area.</textarea>
   </div>
 
-  <div class="card">
-    <h2>Array: {{ wizards }}</h2>
-    <button @click="wizards.push('Draco')">Add a new Wizard</button>
+  <div>
+    Press down the "Enter" key will trigger a console log print:
+    <input
+      type="text"
+      @keydown.enter="console.log('You pressed the Enter key.')"
+    />
+  </div>
+  <div>
+    Press down the "Arrow Down" key will trigger a console log print:
+    <input
+      type="text"
+      @keydown.down="console.log('You pressed the Arrow Down key.')"
+    />
+  </div>
+  <div>
+    Press down the "Space" key will trigger a console log print:
+    <input
+      type="text"
+      @keydown.space="console.log('You pressed the Space key.')"
+    />
+  </div>
+  <div>
+    Press down the "b" key will trigger a console log print:
+    <input type="text" @keydown.b="console.log('You pressed the B key.')" />
+  </div>
+  <div>
+    Press down the "Ctrl c" will trigger a console log print:
+    <input type="text" @keydown.ctrl.c="console.log('You pressed Ctrl c.')" />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 
-let message = ref('Hello, Reactivity!')
-let number = ref(1)
+let message = ref('Hello, v-on!')
 
-function changeMessageToUpperCase() {
-  message.value = message.value.toUpperCase()
-  console.log(message.value)
-}
-function incrementNumber() {
-  number.value += 1
-  console.log(number.value)
+function replaceText(msg) {
+  message.value = msg
 }
 
-let wizard = ref({
-  id: 101,
-  name: 'Gandalf',
-  house: 'Gryffindor',
-  age: 2019,
-  wand: {
-    wood: 'Elder',
-    core: 'Phoenix feather',
-    length: 11
-  }
-})
-
-function changeNameToUpperCase() {
-  wizard.value.name = wizard.value.name.toUpperCase()
-}
-function changeWandCore() {
-  wizard.value.wand.core = 'Dragon heartstring'
-}
-function changeWizard() {
-  wizard.value = {
-    id: 102,
-    name: 'Dumbledore',
-    house: 'Gryffindor',
-    age: 2020,
-    wand: {
-      wood: 'Elder',
-      core: 'Phoenix feather',
-      length: 15
-    }
+function handleInput(event) {
+  console.log(event)
+  let keyCode = event.keyCode
+  if (keyCode < 48 || keyCode > 57) {
+    event.preventDefault()
   }
 }
+function fun1() {
+  console.log('Mouse over div')
 
-let wizards = ref(['Harry', 'Ron', 'Hermione'])
+}
+function fun2(event) {
+  // event.stopPropagation()
+  console.log('Mouse over textarea')
+}
 
 </script>
 
 <style scoped>
-.card {
+#mouseover {
+  text-align: right;
   background-color: purple;
-  color: white;
-  padding: 20px 10px;
-  margin-bottom: 10px;
+  width: 300px;
+  height: 300px;
 }
 </style>
