@@ -1,57 +1,82 @@
 <template>
-  <h1>{{ message }}</h1>
-  <img v-bind:src="imageUrl" alt=""/>
-  <br />
-  <img :src="imageUrl" alt=""/>
+  <div class="card">
+    <h2>Message: {{ message }}</h2>
+    <h2>Number: {{ number }}</h2>
+    <button @click="changeMessageToUpperCase">
+      Change message to upper case
+    </button>
+    <button @click="incrementNumber">Increment number</button>
+  </div>
+  <div class="card">
+    <h2>Name: {{ wizard.name }}</h2>
+    <h2>Wand: {{ wizard.wand }}</h2>
+    <button @click="changeNameToUpperCase">Change name to upper case</button>
+    <button @click="changeWandCore">Change wand core</button>
+    <button @click="changeWizard">Change wizard</button>
+  </div>
 
-
-  <button @click="changeImg">Change image</button>
-  <hr>
-  <input type="text" :value="defaultInputtext">
-  <hr>
-  <p :class="className"> Harry Potter</p>
-
-  <p :class="{ inactive: isInactive, center: isCenter }">
-    Harry Potter
-  </p>
-
-  <p :class="['active', 'center']">Harry Potter</p>
+  <div class="card">
+    <h2>Array: {{ wizards }}</h2>
+    <button @click="wizards.push('Draco')">Add a new Wizard</button>
+  </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-let message = 'Hello, v-bind!'
 
-let imageUrl = ref('/public/img/banner_1.jpg')
+let message = ref('Hello, Reactivity!')
+let number = ref(1)
 
-function changeImg() {
-  imageUrl.value = '/public/img/banner_2.jpg'
+function changeMessageToUpperCase() {
+  message.value = message.value.toUpperCase()
+  console.log(message.value)
+}
+function incrementNumber() {
+  number.value += 1
+  console.log(number.value)
 }
 
-let defaultInputtext = 'Write something here...'
+let wizard = ref({
+  id: 101,
+  name: 'Gandalf',
+  house: 'Gryffindor',
+  age: 2019,
+  wand: {
+    wood: 'Elder',
+    core: 'Phoenix feather',
+    length: 11
+  }
+})
 
-let className = 'active'
+function changeNameToUpperCase() {
+  wizard.value.name = wizard.value.name.toUpperCase()
+}
+function changeWandCore() {
+  wizard.value.wand.core = 'Dragon heartstring'
+}
+function changeWizard() {
+  wizard.value = {
+    id: 102,
+    name: 'Dumbledore',
+    house: 'Gryffindor',
+    age: 2020,
+    wand: {
+      wood: 'Elder',
+      core: 'Phoenix feather',
+      length: 15
+    }
+  }
+}
 
-let isInactive = ref(false)
-let isCenter = ref(false)
+let wizards = ref(['Harry', 'Ron', 'Hermione'])
 
 </script>
 
 <style scoped>
-img {
-  max-width: 300px;
-}
-
-.active {
-  color: green;
-}
-
-.inactive {
-  color: red;
-  text-decoration: line-through;
-}
-
-.center {
-  text-align: center;
+.card {
+  background-color: purple;
+  color: white;
+  padding: 20px 10px;
+  margin-bottom: 10px;
 }
 </style>
