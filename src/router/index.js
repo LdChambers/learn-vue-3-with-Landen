@@ -9,21 +9,81 @@ import BlogPostsGreeting from '@/views/BlogPostsGreeting.vue'
 import NotFound from '@/views/NotFound.vue'
 import { sliderContextKey } from 'element-plus'
 import Ads from '@/views/ads.vue'
+import Login from '@/views/Login.vue'
+import MainLayout from '@/views/MainLayout.vue'
+import { isAuthenticated } from '@/apis/auth'
 
 const router = createRouter({
   history: createWebHistory(),
-    routes: [ 
-        {path: '/', name:'home', component: Home},
-        {path: '/blogPosts',name:'blogPosts', component: BlogPosts,
-          redirect: {name:"blogPostsGreeting"}, 
+    routes: [ {
+      path: '/',
+      name: 'mainLayout',
+      component: MainLayout,
+      redirect: { name: 'home' },
           children: [
-            {path: '',name: 'blogPostsGreeting', component: BlogPostsGreeting},
-          {path: 'blogPosts/:id(\\d+)', name: 'blogPost', components: {default: BlogPost, sidebar: Ads,}},
-        ]},
-        {path: '/About',name:'about', component: About},
-        {path: '/:catchAll(.*)*', name: 'notFound', component: NotFound},
+            {
+            path: '/home',
+            name: 'home',
+            component: Home,
+            meta: { requiresAuth: false },
+        },
+        {
+          path: '/blogPosts',
+          name: 'blogPosts',
+          component: BlogPosts,
+          redirect: { name: 'blogPostsGreeting' },
+          children: [
+            {
+              path: '',
+              name: 'blogPostsGreeting',
+              component: BlogPostsGreeting,
+              meta: { requiresAuth: false },
+            },
+            {
+              path: '/blogPosts/:id(\\d+)',
+              name: 'blogPost',
+              components: {
+                default: BlogPost,
+                sidebar: Ads,
+              },
+              meta: { requiresAuth: true },
+            },
+          ],
+        },
+        {
+          path: '/about',
+          name: 'about',
+          component: About,
+          meta: { requiresAuth: false },
+      }
+    ],
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login,
+    meta: { requiresAuth: false },
+  },
+        {
+          path: '/:catchAll(.*)*', 
+          name: 'notFound', 
+          component: NotFound, 
+          meta: { requiresAuth: false }},
     ]
         
+})
+
+router.beforeEach((to, from) => {
+  console.log(from.name, '->', to.name)
+  if (to.meta.requiresAuth && !isAuthenticated.value) {
+    // Redirect to the login page with the originally requested page as the redirect query parameter
+    return { name: 'login', query: { redirect: to.fullPath } }
+  }
+})
+
+// Global after each navigation guard (for cleanup or loggin)
+router.afterEach((to, from) => {
+  console.log(`Successfully navigated to: ${to.fullPath}`)
 })
 
 export default router
