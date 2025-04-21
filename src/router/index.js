@@ -7,6 +7,8 @@ import BlogPosts from '@/views/BlogPosts.vue'
 import BlogPost from '@/views/BlogPost.vue'
 import BlogPostsGreeting from '@/views/BlogPostsGreeting.vue'
 import NotFound from '@/views/NotFound.vue'
+import { sliderContextKey } from 'element-plus'
+import Ads from '@/views/ads.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -16,7 +18,7 @@ const router = createRouter({
           redirect: {name:"blogPostsGreeting"}, 
           children: [
             {path: '',name: 'blogPostsGreeting', component: BlogPostsGreeting},
-          {path: 'blogPosts/:id(\\d+)', name: 'blogPost', component: BlogPost},
+          {path: 'blogPosts/:id(\\d+)', name: 'blogPost', components: {default: BlogPost, sidebar: Ads,}},
         ]},
         {path: '/About',name:'about', component: About},
         {path: '/:catchAll(.*)*', name: 'notFound', component: NotFound},

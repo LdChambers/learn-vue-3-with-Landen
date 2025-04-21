@@ -27,7 +27,7 @@ import router from '@/router';
         try {
         blogPosts.value = await api.findAll();
     } catch (error) {
-        err.value = error.message;
+        err.value = "an error occurred while loading blog posts";
     } finally {
         loading.value = false;
     }
