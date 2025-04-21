@@ -1,14 +1,14 @@
 <template>
-  <div>
-    <Navigation></Navigation>
-    <router-view></router-view>
-  </div>
+    <nav>
+       <router-link :to="{name: 'home'}">Home</router-link>
+        <router-link :to="{name: 'blogposts'}">Blog Posts</router-link>
+        <router-link :to="{name: 'about'}">About</router-link>
+        
+    </nav>
 </template>
 
-<script setup>
-import Navigation from '@/components/Navigation.vue';
-
-
+<script>
+   
 </script>
 
 <style lang="scss" scoped>
