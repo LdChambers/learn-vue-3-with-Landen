@@ -7,7 +7,6 @@ import BlogPosts from '@/views/BlogPosts.vue'
 import BlogPost from '@/views/BlogPost.vue'
 import BlogPostsGreeting from '@/views/BlogPostsGreeting.vue'
 import NotFound from '@/views/NotFound.vue'
-import { sliderContextKey } from 'element-plus'
 import Ads from '@/views/ads.vue'
 import Login from '@/views/Login.vue'
 import MainLayout from '@/views/MainLayout.vue'
@@ -15,6 +14,20 @@ import { isAuthenticated } from '@/apis/auth'
 
 const router = createRouter({
   history: createWebHistory(),
+  scrollBehavior(to, from, savedPosition) {
+    const scrollBehaviorOptions = {
+      top: 0,
+      behavior: 'smooth',
+    }
+
+    // If the route has a meta field with a scrollToElement property, scroll to that element
+    if (to.meta.scrollToElement) {
+      scrollBehaviorOptions.el = to.meta.scrollToElement
+    }
+
+    // If the route has a savedPosition, return it, otherwise return the scrollBehaviorOptions
+    return savedPosition ?? scrollBehaviorOptions
+  },
     routes: [ {
       path: '/',
       name: 'mainLayout',
@@ -50,7 +63,10 @@ const router = createRouter({
                 default: BlogPost,
                 sidebar: Ads,
               },
-              meta: { requiresAuth: true },
+              meta: {
+                requiresAuth: true,
+                scrollToElement: '.blog-posts-layout',
+              },
             },
           ],
         },
