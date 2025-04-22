@@ -1,16 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 
-// import Home from '@/views/Home.vue'
-// import About from '@/views/About.vue'
-// import BlogPosts from '@/views/BlogPosts.vue'
-// import BlogPost from '@/views/BlogPost.vue'
-// import BlogPostsGreeting from '@/views/BlogPostsGreeting.vue'
-// import NotFound from '@/views/NotFound.vue'
-// import Ads from '@/views/ads.vue'
-// import Login from '@/views/Login.vue'
-// import MainLayout from '@/views/MainLayout.vue'
-import { isAuthenticated } from '@/apis/auth'
+import { getUserRole, isAuthenticated } from '@/apis/auth'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -38,13 +29,15 @@ const router = createRouter({
             path: '/home',
             name: 'home',
             component: () => import('@/views/Home.vue'),
-            meta: { requiresAuth: false },
+            meta: { requiresAuth: false, title: 'Home', isNavLink: true },
         },
         {
           path: '/blogPosts',
           name: 'blogPosts',
           component: () => import('@/views/BlogPosts.vue'),
           meta: {
+            title: 'Blog Posts',
+            isNavLink: true,
             enterAnimation: 'animate__animated animate__bounceIn',
             leaveAnimation: 'animate__animated animate__bounceOut',
           },
@@ -74,8 +67,8 @@ const router = createRouter({
           path: '/about',
           name: 'about',
           component: () => import('@/views/About.vue'),
-          meta: { requiresAuth: false },
-      }
+          meta: { requiresAuth: false, title: 'About', isNavLink: true },
+        },
     ],
   },
   {
@@ -98,6 +91,11 @@ router.beforeEach((to, from) => {
   if (to.meta.requiresAuth && !isAuthenticated.value) {
     // Redirect to the login page with the originally requested page as the redirect query parameter
     return { name: 'login', query: { redirect: to.fullPath } }
+  }
+  const userRole = getUserRole()
+  // Check role-based access
+  if (to.meta.roles && !to.meta.roles.includes(userRole)) {
+    return { name: 'home' } // Redirect to the home page
   }
 })
 
